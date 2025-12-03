@@ -1,34 +1,74 @@
-LIBRARY IEEE;
-USE IEEE.STD_LOGIC_1164.ALL;
+# Multiplexador SN74LS151 - VHDL
 
-ENTITY multiplex IS
-	 PORT ( 
-			enable: 							IN STD_LOGIC;
-			x0, x1, x2 ,x3, x4, x5, x6, x7: 				IN STD_LOGIC;
-			s1, s2, s3:							IN STD_LOGIC;
-			otmux, otmuxn: 		  			OUT STD_LOGIC
-				
-	);
-END multiplex;
+Implementação em VHDL de um multiplexador 8-para-1 SN74LS151 com sinal de controle (strobe).
 
-ARCHITECTURE SN74LS151 OF multiplex IS
-	BEGIN
-	
-		otmux <= x0 WHEN s1 = '0' AND s2 = '0' AND s3 = '0' AND enable = '1' ELSE 
-					x1 WHEN s1 = '0' AND s2 = '0' AND s3 = '1' AND enable = '1' ELSE 
-					x2 WHEN s1 = '0' AND s2 = '1' AND s3 = '0'  AND enable = '1'ELSE 
-					x3 WHEN s1 = '0' AND s2 = '1' AND s3 = '1'  AND enable = '1'ELSE 
-					x4 WHEN s1 = '1' AND s2 = '0' AND s3 = '0'  AND enable = '1'ELSE 
-					x5 WHEN s1 = '1' AND s2 = '0' AND s3 = '1'  AND enable = '1'ELSE 
-					x6 WHEN s1 = '1' AND s2 = '1' AND s3 = '0'  AND enable = '1'ELSE
-					x7;
-					
-		otmuxn <= NOT x0 WHEN s1 = '0' AND s2 = '0' AND s3 = '0'  AND enable = '1'ELSE 
-					NOT x1 WHEN s1 = '0' AND s2 = '0' AND s3 = '1'   AND enable = '1'ELSE 
-					NOT x2 WHEN s1 = '0' AND s2 = '1' AND s3 = '0'   AND enable = '1'ELSE 
-					NOT x3 WHEN s1 = '0' AND s2 = '1' AND s3 = '1'   AND enable = '1'ELSE 
-					NOT x4 WHEN s1 = '1' AND s2 = '0' AND s3 = '0'   AND enable = '1'ELSE 
-					NOT x5 WHEN s1 = '1' AND s2 = '0' AND s3 = '1'   AND enable = '1'ELSE 
-					NOT x6 WHEN s1 = '1' AND s2 = '1' AND s3 = '0'   AND enable = '1'ELSE
-					NOT x7;				
-END ARCHITECTURE;
+## Descrição
+
+Este projeto implementa um multiplexador digital 8-para-1 equivalente ao circuito integrado SN74LS151. O multiplexador seleciona uma de oito entradas de dados e a direciona para a saída baseado nos sinais de seleção.
+
+## Características
+
+- **Tipo:** Multiplexador 8-para-1
+- **Entradas de Dados:** 8 linhas (I0 a I7)
+- **Seleção:** 3 bits (S0, S1, S2)
+- **Controle:** Strobe (ativo baixo)
+- **Saídas:** Normal (Y) e Invertida (W)
+
+## Arquitetura
+
+### Portas
+
+- **Entradas:**
+  - I0 a I7: Entradas de dados (8 bits)
+  - S0, S1, S2: Seleção de entrada (3 bits)
+  - STB: Strobe (controle ativo baixo)
+
+- **Saídas:**
+  - Y: Saída normal
+  - W: Saída invertida
+
+### Lógica de Funcionamento
+
+O multiplexador seleciona a entrada correspondente aos bits de seleção quando o strobe está ativo (baixo). Quando o strobe está inativo (alto), ambas as saídas são forçadas para '0'.
+
+## Tabela Verdade
+
+| STB | S2 | S1 | S0 | Entrada Selecionada |
+|-----|----|----|----|--------------------|
+| 1   | X  | X  | X  | Nenhuma (Y=0, W=0) |
+| 0   | 0  | 0  | 0  | I0                 |
+| 0   | 0  | 0  | 1  | I1                 |
+| 0   | 0  | 1  | 0  | I2                 |
+| 0   | 0  | 1  | 1  | I3                 |
+| 0   | 1  | 0  | 0  | I4                 |
+| 0   | 1  | 0  | 1  | I5                 |
+| 0   | 1  | 1  | 0  | I6                 |
+| 0   | 1  | 1  | 1  | I7                 |
+
+## Como Usar
+
+### Simulação
+
+1. Abra o arquivo multiplex_SN74LS151.vhdl em seu ambiente de desenvolvimento VHDL
+2. Compile o código
+3. Configure os sinais de teste no testbench
+4. Execute a simulação
+
+### Síntese
+
+1. Carregue o arquivo no software de síntese (Quartus, Vivado, etc.)
+2. Configure as pinagens no arquivo de constraints
+3. Sintetize e implemente o design
+4. Programe o FPGA/CPLD
+
+## Ferramentas Sugeridas
+
+- **ModelSim/QuestaSim** - Simulação
+- **Intel Quartus Prime** - Síntese para FPGAs Altera/Intel
+- **Xilinx Vivado** - Síntese para FPGAs Xilinx
+- **GHDL** - Simulador VHDL open-source
+
+## Referências
+
+- Datasheet SN74LS151 - Texas Instruments
+- IEEE Std 1076-2008 (VHDL Language Reference Manual)
